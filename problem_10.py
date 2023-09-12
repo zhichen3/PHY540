@@ -30,7 +30,7 @@ class problem_10:
     def _gaussian(self, n):
         # Compute the Gaussian distribution given an array of n
 
-        return np.exp(-0.5*((n-self.mean) / self.sigma)**2)
+        return np.exp(-0.5*((n - self.mean)/self.sigma)**2) / (self.sigma*np.sqrt(2.0*np.pi))
 
     def _plot(self):
         # Plot Poisson Distribution and Gaussian
@@ -38,17 +38,17 @@ class problem_10:
         fig, ax1 = plt.subplots()
 
         poisson_samples = self._draw_poisson(1000)
-        ax1.hist(poisson_samples, bins=15, density=True, label="Poisson")
+        ax1.hist(poisson_samples, bins=20, density=True, label="Poisson")
 
         x_gaussian = np.linspace(25.0, 175.0, 1000)
         y_gaussian = self._gaussian(x_gaussian)
 
         ax1.legend(loc="upper right")
-
-        ax2=ax1.twinx()
-        ax2.plot(x_gaussian, y_gaussian, color='red', label="Gaussian")
-        ax2.set_ylim([0.0, y_gaussian.max()])
-        ax2.legend(loc="upper left")
+        ax1.plot(x_gaussian, y_gaussian, color='red', label="Gaussian")
+        # ax2=ax1.twinx()
+        # ax2.plot(x_gaussian, y_gaussian, color='red', label="Gaussian")
+        # ax2.set_ylim([0.0, y_gaussian.max()])
+        # ax2.legend(loc="upper left")
 
         plt.show()
         return fig

@@ -35,14 +35,14 @@ class problem_9:
         
     def _draw_uniform(self, size):
         # Draws size=(M, N) samples from uniform distribution and output as array
-        # N is the number of samples.
+        # N is the number of samples to find the mean
         # M is the M times that we take N samples
 
         return self.generator.uniform(low=0.0, high=self.L, size=size)
 
     def _draw_exponential(self, size):
         # Draws size=(M, N) samples from exponential distribution and output as array
-        # N is the number of samples.
+        # N is the number of samples, we take to find the mean
         # M is the M times that we take N samples
 
         # scale for the exponential distribution
@@ -89,16 +89,20 @@ class problem_9:
     def _compute_gaussian(self, x, mean, sigma):
         # compute Normalized Gaussian distribution given mean and sigma
 
-        return np.exp(-0.5*((x - mean)/sigma)**2)
+        return np.exp(-0.5*((x - mean)/sigma)**2) / (sigma*np.sqrt(2.0*np.pi))
 
     def _plot(self, Ns, dist_type, plot_gaussian=False):
         # Plot Probability Distribution and Gaussian distribution:
+
+        # size=(M, N), where N is the number of samples we use to find the mean
+        #                    M is the number of means we have.
+        M = 1000
+        size = (M, Ns)
 
         if dist_type == "uniform":
 
             mean = 0.5 * self.L
             sigma = np.sqrt((self.L * self.L / 12) / Ns)
-            size = (1000, Ns)
             xbars = self._compute_mean_from_sample(size, "uniform")
 
         elif dist_type == "exponential":
@@ -112,26 +116,31 @@ class problem_9:
             sigma_func = lambdify([L, N], self._compute_exponential_sigma())
             sigma = sigma_func(self.L, Ns)
 
-            size = (1000, Ns)
             xbars = self._compute_mean_from_sample(size, "exponential")
-
         else:
             ValueError("Invalid Distribution Type")
 
+        # Number of bins
         bins = 20
 
         fig, ax1 = plt.subplots()
-        ax1.hist(xbars, bins=bins, label=r"<x>(N)")
+
+        # Plot probability density using matplotlib with density=True
+        ax1.hist(xbars, bins=bins, density=True, label=r"<x>(N)")
         ax1.legend(loc="upper right")
+        ax1.set_xlabel("<x>(N)")
+        ax1.set_ylabel("Probability Density")
 
         if plot_gaussian:
-            x = np.linspace(0.0, self.L, 1000)
+            x = np.linspace(0.0, self.L, M)
             y = self._compute_gaussian(x, mean, sigma)
 
-            ax2 = ax1.twinx()
-            ax2.plot(x, y, color="red", label="Gaussian")
-            ax2.legend(loc="upper left")
-            ax2.set_ylim([0.0, np.amax(y)])
+            # ax2 = ax1.twinx()
+            # ax2.plot(x, y, color="red", label="Gaussian")
+            # ax2.legend(loc="upper left")
+            # ax2.set_ylim([0.0, np.amax(y)])
+            # ax2.set_ylabel("Probability Density")
+            ax1.plot(x, y, color="red", label="Gaussian")
 
         plt.title(f"N = {size[1]}")
         plt.show()
@@ -143,13 +152,13 @@ class problem_9:
         # Plot Distribution of <X>(N) using uniform distribution.
         
         # N = 1
-        N_1 = self._plot(1, "uniform")
+        N_1 = self._plot(1, "uniform", plot_gaussian=True)
         
         # N = 3
-        N_3 = self._plot(3, "uniform")
+        N_3 = self._plot(3, "uniform", plot_gaussian=True)
         
         # N = 10
-        N_10 = self._plot(10, "uniform")
+        N_10 = self._plot(10, "uniform", plot_gaussian=True)
 
         # N = 100
         N_100 = self._plot(100, "uniform", plot_gaussian=True)
@@ -171,13 +180,13 @@ class problem_9:
         # Plot Distribution of <X>(N) using exponential distribution.
         
         # N = 1
-        N_1 = self._plot(1, "exponential")
+        N_1 = self._plot(1, "exponential", plot_gaussian=True)
         
         # N = 3
-        N_3 = self._plot(3, "exponential")
+        N_3 = self._plot(3, "exponential", plot_gaussian=True)
         
         # N = 10
-        N_10 = self._plot(10, "exponential")
+        N_10 = self._plot(10, "exponential", plot_gaussian=True)
 
         # N = 100
         N_100 = self._plot(100, "exponential", plot_gaussian=True)
