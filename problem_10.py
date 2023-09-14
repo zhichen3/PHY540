@@ -58,7 +58,7 @@ class problem_10:
         
         self._plot()
 
-
+# mu=100, mean=100, sigma=10
 prob_10 = problem_10(100, 100, 10)
 prob_10.part_a()
 
