@@ -16,10 +16,8 @@ E_i = np.array([251.31, 299.42, 417.20, 829.49, 911.66,
                 3752.52])
 
 # Create symbols for sympy
-b = symbols('b')
-E = symbols('E')
+b, E = symbols('b E')
 lnQ = symbols('lnQ')
-N = symbols('N')
 i = symbols('i')
 
 # Sum(ln(Q_i)) which is the same as ln(Prod(Q_i))
@@ -47,4 +45,3 @@ T = 1.0 / (sol * 0.695)
 # Print out solution
 print(f"beta is {sol[0]}")
 print(f"T is {T[0]}")
-
